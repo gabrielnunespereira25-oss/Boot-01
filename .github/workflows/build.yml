@@ -1,0 +1,25 @@
+
+name: Build boot-001 PSP
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: pspdev/pspdev:latest
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Compilar para PSP
+        run: make
+
+      - name: Salvar EBOOT.PBP
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot-001-psp
+          path: EBOOT.PBP
+          if-no-files-found: error
