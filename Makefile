@@ -1,49 +1,32 @@
 
-name: Build Dark Bot PSP
+TARGET = DarkBot
+BUILD_PRX = 1
 
-on:
-  push:
-  workflow_dispatch:
+PSP_EBOOT_TITLE = Dark Bot
+EXTRA_TARGETS = EBOOT.PBP
 
-permissions:
-  contents: read
+OBJS = \
+	src/main.o \
+	src/png_loader.o
 
-jobs:
-  build:
-    name: Compilar Dark Bot
-    runs-on: ubuntu-latest
+INCDIR =
+CFLAGS = -O2 -G0 -Wall
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+ASFLAGS = $(CFLAGS)
 
-    container:
-      image: pspdev/pspdev:latest
+LIBDIR =
+LDFLAGS =
 
-    steps:
-      - name: Baixar codigo do repositorio
-        uses: actions/checkout@v4
+LIBS = \
+	-lpspgu \
+	-lpspgum \
+	-lpspdisplay \
+	-lpspctrl \
+	-lpspkernel \
+	-lpng \
+	-lz \
+	-lm
 
-      - name: Verificar diretorio
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 3 -type f
+PSPSDK = $(shell psp-config --pspsdk-path)
 
-      - name: Preparar ambiente
-        run: |
-          command -v psp-config
-          psp-config --pspsdk-path
-
-      - name: Compilar Dark Bot
-        run: |
-          make clean
-          make
-
-      - name: Verificar EBOOT
-        run: |
-          ls -lh EBOOT.PBP
-
-      - name: Publicar EBOOT.PBP
-        uses: actions/upload-artifact@v4
-        with:
-          name: DarkBot-PSP
-          path: EBOOT.PBP
-          if-no-files-found: error
-          retention-days: 14
+include $(PSPSDK)/lib/build.mak
