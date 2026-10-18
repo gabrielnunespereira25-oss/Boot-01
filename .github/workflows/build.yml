@@ -1,5 +1,5 @@
 
-name: Dark Bot PSP - Build
+name: Dark Bot PSP
 
 on:
   push:
@@ -10,38 +10,21 @@ permissions:
 
 jobs:
   build:
-    name: Build EBOOT
+    name: Compilar Dark Bot
     runs-on: ubuntu-latest
 
     container:
       image: pspdev/pspdev:latest
 
     steps:
-      - name: Checkout
+      - name: Baixar projeto
         uses: actions/checkout@v4
 
       - name: Mostrar arquivos
         run: |
-          echo "Diretorio atual:"
           pwd
-          echo "Arquivos da raiz:"
           ls -la
-          echo "Arquivos do projeto:"
-          find . -maxdepth 4 -type f
-
-      - name: Conferir Makefile
-        run: |
-          if [ ! -f ./Makefile ]; then
-            echo "ERRO: Makefile nao encontrado na raiz."
-            exit 1
-          fi
-          echo "Makefile encontrado."
-
-      - name: Conferir codigo
-        run: |
-          test -f src/main.c
-          test -f src/png_loader.c
-          test -f src/png_loader.h
+          find . -maxdepth 3 -type f
 
       - name: Compilar
         run: |
