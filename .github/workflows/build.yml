@@ -1,25 +1,49 @@
 
-name: Build boot-001 PSP
+name: Build Dark Bot PSP
 
 on:
   push:
+    branches:
+      - main
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
+    name: Compilar Dark Bot
     runs-on: ubuntu-latest
-    container: pspdev/pspdev:latest
+
+    container:
+      image: pspdev/pspdev:latest
 
     steps:
-      - name: Baixar codigo
+      - name: Baixar repositorio
         uses: actions/checkout@v4
 
-      - name: Compilar para PSP
-        run: make
+      - name: Verificar arquivos principais
+        run: |
+          test -f Makefile
+          test -f src/main.c
+          test -f src/png_loader.c
+          test -f src/png_loader.h
+          echo "Arquivos principais encontrados."
 
-      - name: Salvar EBOOT.PBP
+      - name: Compilar jogo para PSP
+        run: |
+          make clean
+          make
+
+      - name: Verificar EBOOT.PBP
+        run: |
+          test -s EBOOT.PBP
+          echo "EBOOT.PBP criado com sucesso."
+
+      - name: Publicar jogo compilado
         uses: actions/upload-artifact@v4
         with:
-          name: boot-001-psp
+          name: DarkBot-PSP
           path: EBOOT.PBP
           if-no-files-found: error
+          retention-days: 14
