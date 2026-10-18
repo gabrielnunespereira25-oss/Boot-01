@@ -19,3 +19,6 @@ PSP_EBOOT_TITLE = Dark Bot
 
 PSPSDK = $(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
+
+main.o: main.c
+	$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
