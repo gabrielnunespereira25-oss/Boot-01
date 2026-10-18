@@ -2,7 +2,7 @@
 TARGET = DarkBot
 BUILD_PRX = 1
 
-OBJS = main.o
+OBJS = src/main.o
 
 CFLAGS = -O2 -G0 -Wall
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
@@ -19,6 +19,3 @@ PSP_EBOOT_TITLE = Dark Bot
 
 PSPSDK = $(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
-
-main.o: main.c
-	$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
