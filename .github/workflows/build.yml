@@ -1,45 +1,23 @@
-
-name: Dark Bot PSP
+name: Build Dark Bot PSP
 
 on:
-  push:
   workflow_dispatch:
-
-permissions:
-  contents: read
+  push:
+    branches: [ "main" ]
 
 jobs:
   build:
-    name: Compilar Dark Bot
     runs-on: ubuntu-latest
-
     container:
       image: pspdev/pspdev:latest
-
     steps:
-      - name: Baixar projeto
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Mostrar arquivos
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 3 -type f
-
-      - name: Compilar
-        run: |
-          make clean
-          make
-
-      - name: Conferir EBOOT
-        run: |
-          test -s EBOOT.PBP
-          ls -lh EBOOT.PBP
-
-      - name: Disponibilizar jogo
+      - name: Compile
+        run: make clean && make
+      - name: Upload EBOOT.PBP
         uses: actions/upload-artifact@v4
         with:
-          name: DarkBot-PSP
+          name: DarkBot-EBOOT
           path: EBOOT.PBP
           if-no-files-found: error
-          retention-days: 14
